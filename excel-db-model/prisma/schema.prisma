@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Upload {
+  id       Int    @id @default(autoincrement())
+  fileName String
+
+  worksheets Worksheet[]
+}
+
+model Worksheet {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  uploadId Int
+  upload   Upload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+
+  records Record[]
+}
+
+model Record {
+  id Int @id @default(autoincrement())
+
+  worksheetId Int
+  worksheet   Worksheet @relation(fields: [worksheetId], references: [id], onDelete: Cascade)
+
+  rowData Json
+}
